@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+"""Module to control all other files for the flask
+application"""
 
 from flask import Flask
 from models import storage
