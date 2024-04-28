@@ -14,12 +14,14 @@ app.register_blueprint(app_views)
 @app.teardown_appcontext
 def close(exception):
     """Close the db on teardown"""
+
     storage.close()
 
 
 @app.errorhandler(404)
 def page_not_found(error):
     """Render a custom 404 JSON"""
+    
     return {"error": "Not found"}, 404
 
 

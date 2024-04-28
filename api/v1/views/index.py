@@ -18,11 +18,14 @@ classes = {"amenity": Amenity, "cities": City,
 
 @app_views.route('/status', strict_slashes=False)
 def status():
+    """Default status function"""
     return {"status": "OK"}
 
 
 @app_views.route('/stats', strict_slashes=False)
 def stats():
+    """Function to show the stats of all classes"""
+    
     stats = {}
     for cls in classes.keys():
         count = storage.count(classes[cls])
