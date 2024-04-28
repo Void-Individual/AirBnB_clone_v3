@@ -7,7 +7,7 @@ from api.v1.views import app_views
 from flask import abort, jsonify, request
 
 
-@app_views.route('/states')
+@app_views.route('states')
 def get_states():
     """Function to retireve all states"""
 
@@ -17,7 +17,7 @@ def get_states():
     return jsonify(states)
 
 
-@app_views.route('/states/<state_id>', methods=['GET'])
+@app_views.route('states/<state_id>', methods=['GET'])
 def get_state_id(state_id):
     """Function to retrieve a state with it's id"""
 
@@ -28,7 +28,7 @@ def get_state_id(state_id):
         return state.to_dict()
 
 
-@app_views.route('/states/<state_id>',
+@app_views.route('states/<state_id>',
                  methods=['DELETE'])
 def delete_state_id(state_id):
     """Function to delete a state with it's id"""
@@ -42,7 +42,7 @@ def delete_state_id(state_id):
         return {}, 200
 
 
-@app_views.route('/states/', methods=['POST'])
+@app_views.route('states', methods=['POST'])
 def put_state():
     """Function to create a state with certain details"""
 
@@ -59,7 +59,7 @@ def put_state():
     return new_state.to_dict(), 201
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'])
+@app_views.route('states/<state_id>', methods=['PUT'])
 def put_in_state(state_id):
     """Function to change certain details in a state"""
 

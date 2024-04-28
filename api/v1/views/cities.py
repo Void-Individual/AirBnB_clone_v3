@@ -18,3 +18,6 @@ def cities_in_state(state_id):
         cities.append(city.to_dict())
 
     return jsonify(cities)
+
+
+#@app_views.route('/cities')
