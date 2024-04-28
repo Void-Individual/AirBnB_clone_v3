@@ -84,13 +84,10 @@ class DBStorage:
 
         count = 0
         if not cls:
-            for clas in classes.values():
-                query = self.__session.query(clas)
-                for x in query:
-                    count += 1
+            for cls in [State, City, User, Place, Review, Amenity]:
+                count += self.__session.query(cls).count()
         else:
-            if cls in classes.values():
-                query = self.__session.query(cls)
-                for x in query:
-                    count += 1
+            if cls in [State, City, User, Place, Review, Amenity]:
+                count = self.__session.query(cls).count()
+
         return count

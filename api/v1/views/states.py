@@ -48,10 +48,10 @@ def put_state():
 
     data = request.get_json()
     if not data:
-        abort(404, description='Not a JSON')
+        abort(400, description='Not a JSON')
     if 'name' not in data:
-        abort(404, description='Missing name')
-    new_state = State(data)
+        abort(400, description='Missing name')
+    new_state = State()
     for key, value in data.items():
         setattr(new_state, key, value)
     storage.new(new_state)
@@ -68,7 +68,7 @@ def put_in_state(state_id):
         abort(404)
     data = request.get_json()
     if not data:
-        abort(404, description='Not a JSON')
+        abort(400, description='Not a JSON')
     for key, value in data.items():
         if key not in ['id', 'updated_at', 'created_at']:
             setattr(state, key, value)
