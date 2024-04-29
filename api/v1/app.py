@@ -6,7 +6,6 @@ from os import getenv
 from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
-from werkzeug.exceptions import NotFound
 
 app = Flask(__name__)
 

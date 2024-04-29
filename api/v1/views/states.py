@@ -7,7 +7,7 @@ from api.v1.views import app_views
 from flask import abort, jsonify, request
 
 
-@app_views.route('states')
+@app_views.route('/states', methods=['GET'], strict_slashes=False)
 def get_states():
     """Function to retireve all states"""
 
@@ -17,49 +17,46 @@ def get_states():
     return jsonify(states)
 
 
-@app_views.route('states/<state_id>', methods=['GET'])
+@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def get_state_id(state_id):
     """Function to retrieve a state with it's id"""
 
     state = storage.get(State, state_id)
-    if not state:
+    if state is None:
         abort(404)
     else:
-        return state.to_dict()
+        return jsonify(state.to_dict())
 
 
-@app_views.route('states/<state_id>',
+@app_views.route('/states/<state_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_state_id(state_id):
     """Function to delete a state with it's id"""
 
     state = storage.get(State, state_id)
-    if not state:
+    if state is None:
         abort(404)
     else:
-        storage.delete(state)
+        state.delete()
         storage.save()
-        return {}, 200
+        return jsonify({}), 200
 
 
-@app_views.route('states', methods=['POST'])
+@app_views.route('/states', methods=['POST'], strict_slashes=False)
 def put_state():
     """Function to create a state with certain details"""
 
     data = request.get_json()
-    if not data:
-        abort(400, description='Not a JSON')
+    if data is None:
+        abort(400, 'Not a JSON')
     if 'name' not in data:
-        abort(400, description='Missing name')
-    new_state = State()
-    for key, value in data.items():
-        setattr(new_state, key, value)
-    storage.new(new_state)
-    storage.save()
-    return new_state.to_dict(), 201
+        abort(400, 'Missing name')
+    new_state = State(**data)
+    new_state.save()
+    return jsonify(new_state.to_dict()), 201
 
 
-@app_views.route('states/<state_id>', methods=['PUT'])
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_in_state(state_id):
     """Function to change certain details in a state"""
 
@@ -67,11 +64,10 @@ def put_in_state(state_id):
     if not state:
         abort(404)
     data = request.get_json()
-    if not data:
-        abort(400, description='Not a JSON')
+    if data is None:
+        abort(400, 'Not a JSON')
     for key, value in data.items():
         if key not in ['id', 'updated_at', 'created_at']:
             setattr(state, key, value)
-            state.save()
-    storage.save()
-    return state.to_dict(), 200
+    state.save()
+    return jsonify(state.to_dict()), 200
