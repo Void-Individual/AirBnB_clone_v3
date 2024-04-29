@@ -16,13 +16,13 @@ classes = {"amenities": Amenity, "cities": City,
            "places": Place, "reviews": Review, "states": State, "users": User}
 
 
-@app_views.route('/status', strict_slashes=False)
+@app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status():
     """Default status function"""
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats', strict_slashes=False)
+@app_views.route('/stats', methods=['GET'])
 def stats():
     """Function to show the stats of all classes"""
 
