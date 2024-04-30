@@ -23,6 +23,7 @@ def get_user(id):
     user = storage.get(User, id)
     if user is None:
         abort(404)
+
     return jsonify(user.to_dict())
 
 
@@ -33,6 +34,7 @@ def delete_user(id):
     user = storage.get(User, id)
     if user is None:
         abort(404)
+
     user.delete()
     storage.save()
     return jsonify({}), 200
@@ -48,6 +50,7 @@ def create_user():
 
     if 'email' not in data:
         abort(400, 'Missing email')
+
     if 'password' not in data:
         abort(400, 'Missing password')
 

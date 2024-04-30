@@ -23,6 +23,7 @@ def places_in_city(city_id):
     for place in places:
         if place.city_id == city_id:
             city_places.append(place.to_dict())
+
     return jsonify(city_places)
 
 
@@ -71,6 +72,7 @@ def create_place(city_id):
 
     if 'name' not in data:
         abort(400, 'Missing name')
+    data['city_id'] = city_id
     place = Place(**data)
     place.save()
     return jsonify(place.to_dict()), 201
