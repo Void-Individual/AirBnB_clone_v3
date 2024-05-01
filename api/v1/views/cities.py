@@ -8,7 +8,7 @@ from models.state import State
 from models import storage
 
 
-@app_views.route('states/<state_id>/cities', methods=['GET'])
+@app_views.route('/states/<state_id>/cities', methods=['GET'])
 def cities_in_state(state_id):
     """Function to retrieve the cities in a state"""
 
@@ -23,7 +23,7 @@ def cities_in_state(state_id):
     return jsonify(cities)
 
 
-@app_views.route('cities/<city_id>', methods=['GET'])
+@app_views.route('/cities/<city_id>', methods=['GET'])
 def get_city_id(city_id):
     """Function to retrieve a city with its id"""
 
@@ -31,10 +31,10 @@ def get_city_id(city_id):
     if not city:
         abort(404)
 
-    return city.to_dict()
+    return jsonify(city.to_dict())
 
 
-@app_views.route('cities/<city_id>', methods=['DELETE'])
+@app_views.route('/cities/<city_id>', methods=['DELETE'])
 def delete_city_id(city_id):
     """Function to delete a city with it's id"""
 
@@ -44,10 +44,10 @@ def delete_city_id(city_id):
 
     city.delete()
     storage.save()
-    return {}, 200
+    return jsonify({}), 200
 
 
-@app_views.route('states/<state_id>/cities', methods=['POST'])
+@app_views.route('/states/<state_id>/cities', methods=['POST'])
 def add_city_to_state(state_id):
     """Function to add a new city to a state_id"""
 
@@ -65,4 +65,23 @@ def add_city_to_state(state_id):
     data['state_id'] = state_id
     new_city = City(**data)
     new_city.save()
-    return new_city, 201
+    return jsonify(new_city.to_dict()), 201
+
+
+@app_views.route('/cities/<id>', methods=['PUT'], strict_slashes=False)
+def update_city(id):
+    """Function to update the details of a city object"""
+
+    city = storage.get(City, id)
+    if city is None:
+        abort(404)
+
+    data = request.get_json()
+    if data is None:
+        abort(400, 'Not a JSON')
+
+    for key, value in data.items():
+        if key not in ['id', 'state_id', 'created_at', 'updated_at']:
+            setattr(city, key, value)
+    city.save()
+    return jsonify(city.to_dict()), 200

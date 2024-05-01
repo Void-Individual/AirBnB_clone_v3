@@ -69,6 +69,9 @@ def create_review(place_id):
     if user is None:
         abort(404)
 
+    if 'text' not in data:
+        abort(400, 'Missing text')
+
     review = Review(**data)
     review.save()
     return jsonify(review.to_dict()), 201
