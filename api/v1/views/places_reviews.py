@@ -18,11 +18,9 @@ def reviews_of_place(place_id):
     if place is None:
         abort(404)
 
-    reviews = storage.all(Review).values()
     place_reviews = []
-    for review in reviews:
-        if review.place_id == place_id:
-            place_reviews.append(review.to_dict())
+    for review in place.reviews:
+        place_reviews.append(review.to_dict())
     return jsonify(place_reviews)
 
 
