@@ -32,43 +32,42 @@ def places_in_city(city_id):
 def places_search():
     """Function to retrieve all place objects depending on json request"""
 
-    try:
-        data = request.get_json()
-        saved_places = storage.all(Place).values()
-        saved_cities = storage.all(City).values()
-        if data is None or (not data['states'] and not data['cities']
-                             and not data['amenities']):
-            return jsonify([place.to_dict() for place in saved_places])
-
-        matched_places = []
-        if data.get('states'):
-            state_ids = data['states']
-            cities_in_states = [city for city in saved_cities if city.state_id in state_ids]
-            city_ids = [city.id for city in cities_in_states]
-            state_places = [place for place in saved_places if place.city_id in city_ids]
-            matched_places = state_places
-
-        if data.get('cities'):
-            city_ids = data['cities']
-            city_places = [place for place in saved_places if place.city_id in city_ids]
-
-        for place in city_places:
-            if place not in matched_places:
-                matched_places.append(place)
-
-        if data.get('amenities'):
-            amenity_ids = data['amenities']
-            place_with_amenities = [place for place in saved_places if place.amenity_ids == amenity_ids]
-            if matched_places:
-                matching_places = [place.to_dict() for place in matched_places if place in place_with_amenities]
-            else:
-                matching_places = [place.to_dict() for place in place_with_amenities]
-            return jsonify(matching_places)
-        else:
-            matching_places = [place.to_dict() for place in matched_places]
-            return jsonify(matching_places)
-    except Exception:
+    data = request.get_json()
+    if data is None:
         abort(400, 'Not a JSON')
+    saved_places = storage.all(Place).values()
+    saved_cities = storage.all(City).values()
+    if data is None or (not data['states'] and not data['cities']
+                         and not data['amenities']):
+        return jsonify([place.to_dict() for place in saved_places])
+
+    matched_places = []
+    if data.get('states'):
+        state_ids = data['states']
+        cities_in_states = [city for city in saved_cities if city.state_id in state_ids]
+        city_ids = [city.id for city in cities_in_states]
+        state_places = [place for place in saved_places if place.city_id in city_ids]
+        matched_places = state_places
+
+    if data.get('cities'):
+        city_ids = data['cities']
+        city_places = [place for place in saved_places if place.city_id in city_ids]
+
+    for place in city_places:
+        if place not in matched_places:
+            matched_places.append(place)
+
+    if data.get('amenities'):
+        amenity_ids = data['amenities']
+        place_with_amenities = [place for place in saved_places if place.amenity_ids == amenity_ids]
+        if matched_places:
+            matching_places = [place.to_dict() for place in matched_places if place in place_with_amenities]
+        else:
+            matching_places = [place.to_dict() for place in place_with_amenities]
+        return jsonify(matching_places)
+    else:
+        matching_places = [place.to_dict() for place in matched_places]
+        return jsonify(matching_places)
 
 
 @app_views.route('/places/<id>', methods=['GET'], strict_slashes=False)
