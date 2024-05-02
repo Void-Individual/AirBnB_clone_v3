@@ -70,13 +70,12 @@ class BaseModel:
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
 
+        if models.storage_t == 'db':
+            if 'password' in new_dict:
+                del new_dict['password']
+
         return new_dict
 
     def delete(self):
         """delete the current instance from the storage"""
         models.storage.delete(self)
-
-class User(BaseModel):
-    def __init__(self, password, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.password = hashlib.md5(password.encode()).hexdigest()
