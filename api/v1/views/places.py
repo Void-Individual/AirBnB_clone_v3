@@ -13,6 +13,7 @@ import requests
 import json
 from os import getenv
 
+
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
                  strict_slashes=False)
 def places_in_city(city_id):
@@ -40,8 +41,8 @@ def places_search():
         abort(400, 'Not a JSON')
 
     saved_places = storage.all(Place).values()
-    if not data or (not data.get('states') and not data.get('cities')
-                         and not data.get('amenitites')):
+    if not data or (not data.get('states') and not data.get('cities') and not
+                    data.get('amenitites')):
         return jsonify([place.to_dict() for place in saved_places])
 
     matched_places = []
@@ -78,7 +79,7 @@ def places_search():
             req = url.format(place.id)
             response = requests.get(req)
             resp = json.loads(response)
-            p_amenities = [storage.get(Amenity , obj[id]) for obj in resp]
+            p_amenities = [storage.get(Amenity, obj[id]) for obj in resp]
             for amenity in p_amenities:
                 if amenity not in amenities:
                     matched_places.pop(x)
