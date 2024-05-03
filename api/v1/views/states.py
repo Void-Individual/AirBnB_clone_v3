@@ -47,15 +47,16 @@ def delete_state_id(state_id):
 def put_state():
     """Function to create a state with certain details"""
 
-    data = request.get_json()
-    if data is None:
-        abort(400, 'Not a JSON')
-    if 'name' not in data:
-        abort(400, 'Missing name')
-    new_state = State(**data)
-    new_state.save()
-    return make_response(jsonify(new_state.to_dict()), 201)
+    if not request.get_json():
+        abort(400, description="Not a JSON")
 
+    if 'name' not in request.get_json():
+        abort(400, description="Missing name")
+
+    data = request.get_json()
+    instance = State(**data)
+    instance.save()
+    return make_response(jsonify(instance.to_dict()), 201)
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_in_state(state_id):
