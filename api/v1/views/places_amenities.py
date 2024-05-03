@@ -39,7 +39,9 @@ def delete_amenity_of_place(place_id, amenity_id):
 
     if amenity.place_id != place_id:
         abort(404)
+
     place.amenities.remove(amenity)
+    amenity.delete()
     storage.save()
     return jsonify({}), 200
 
