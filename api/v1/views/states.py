@@ -14,7 +14,7 @@ def get_states():
     states = []
     for state in storage.all(State).values():
         states.append(state.to_dict())
-    print('Check 0')
+
     return jsonify(states)
 
 
